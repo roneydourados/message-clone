@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 import { BsGithub, BsGoogle } from "react-icons/bs";
@@ -10,14 +10,25 @@ import { Input } from "@/app/components/inputs/Input";
 import { Button } from "@/app/components/Button";
 import { AuthSocialButton } from "./AuthSocialButton";
 import { toast } from "react-hot-toast";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Variant = "LOGIN" | "REGISTER";
 
 export const AuthForm = () => {
+  const session = useSession()
+  const router = useRouter()
   const [variant, setVariant] = useState<Variant>("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState('Faça seu login')
+
+  //agora no start do formulário para validar a sessão
+  useEffect(() => {
+    if (session?.status === 'authenticated') {
+      router.push('/users')
+    }
+  }, [session?.status, router])
+
 
   const toggleVariant = useCallback(() => {
     if (variant === "LOGIN") {
@@ -27,7 +38,7 @@ export const AuthForm = () => {
       setVariant("LOGIN");
       setTitle('Faça seu login')
     }
-  }, [variant, title]);
+  }, [variant]);
 
   const {
     register,
@@ -54,11 +65,7 @@ export const AuthForm = () => {
   const registerUser: SubmitHandler<FieldValues> = async (data) => {
     await axios
       .post("/api/register", data)
-      .then(() => {
-        toast.success("Registro realizado!");
-        setIsLoading(false);
-        setVariant("LOGIN");
-      })
+      .then(() => { signIn('credentials', data) })
       .catch(() => toast.error("erro ao efetuar registro"))
       .finally(() => setIsLoading(false));
   };
@@ -73,6 +80,12 @@ export const AuthForm = () => {
           toast.error("Credenciais inválida!");
         } else if (callback?.ok) {
           toast.success("Sucesso!");
+
+          /**para login de cadastro local
+           * tem que colocar o router aqui, pois
+           * ele não é reconhecido no usereffect
+           */
+          router.push('/users')
         }
       })
       .finally(() => {
@@ -83,7 +96,15 @@ export const AuthForm = () => {
   const socialAction = (action: string) => {
     setIsLoading(true);
 
-    //nextauth social sign in
+    signIn(action, { redirect: false })
+      .then((callback) => {
+        if (callback?.error) {
+          toast.error("Credenciais inválida!")
+        } else if (callback?.ok) {
+          toast.success('Sucesso ao realizar login!')
+        }
+      })
+      .finally(() => setIsLoading(false))
   };
 
   return (
@@ -168,11 +189,13 @@ export const AuthForm = () => {
             <AuthSocialButton
               icon={BsGithub}
               onClick={() => socialAction("github")}
+              text="Github"
             />
 
             <AuthSocialButton
               icon={BsGoogle}
               onClick={() => socialAction("google")}
+              text="Google"
             />
           </div>
 
