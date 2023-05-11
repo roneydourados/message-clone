@@ -38,10 +38,10 @@ export default function Home() {
          text-tray-900
        "
         >
-          Entre em sua conta
+          Chat Messeger
         </h2>
       </div>
       <AuthForm />
     </div>
-  )
+  );
 }
