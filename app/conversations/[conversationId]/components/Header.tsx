@@ -28,12 +28,13 @@ export const Header: React.FC<HeaderProps> = ({
 
   const { members } = useActiveList();
   const isActive = members.indexOf(otherUser?.email!) !== -1;
+
   const statusText = useMemo(() => {
     if (conversation.isGroup) {
-      return `${conversation.users.length} members`;
+      return `${conversation.users.length} membros`;
     }
 
-    return isActive ? 'Active' : 'Offline'
+    return isActive ? 'Online' : 'Offline'
   }, [conversation, isActive]);
 
   return (

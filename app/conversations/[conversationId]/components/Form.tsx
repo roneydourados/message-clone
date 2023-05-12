@@ -62,7 +62,7 @@ export const Form = () => {
       <CldUploadButton
         options={{ maxFiles: 1 }}
         onUpload={handleUpload}
-        uploadPreset="pgc9ehd5"
+        uploadPreset="mw038grb"
       >
         <HiPhoto size={30} className="text-sky-500" />
       </CldUploadButton>
@@ -75,7 +75,7 @@ export const Form = () => {
           register={register}
           errors={errors}
           required
-          placeholder="Write a message"
+          placeholder="Digite para escrever sua mensagem..."
         />
         <button
           type="submit"

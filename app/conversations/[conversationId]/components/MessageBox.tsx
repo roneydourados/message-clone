@@ -49,7 +49,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
             {data.sender.name}
           </div>
           <div className="text-xs text-gray-400">
-            {format(new Date(data.createdAt), 'p')}
+            {format(new Date(data.createdAt), 'k:mm')}
           </div>
         </div>
         <div className={message}>
@@ -81,7 +81,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
             text-gray-500
             "
           >
-            {`Seen by ${seenList}`}
+            {`Visto por ${seenList}`}
           </div>
         )}
       </div>
