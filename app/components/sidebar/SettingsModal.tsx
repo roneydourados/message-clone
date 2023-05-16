@@ -52,10 +52,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     });
   }
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
 
-    axios.post('/api/settings', data)
+    await axios.post('/api/settings', data)
       .then(() => {
         router.refresh();
         onClose();

@@ -19,10 +19,10 @@ export const UserBox: React.FC<UserBoxProps> = ({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback(async () => {
     setIsLoading(true);
 
-    axios.post('/api/conversations', { userId: data.id })
+    await axios.post('/api/conversations', { userId: data.id })
       .then((data) => {
         router.push(`/conversations/${data.data.id}`);
       })

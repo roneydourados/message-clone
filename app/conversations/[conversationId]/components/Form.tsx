@@ -30,16 +30,16 @@ export const Form = () => {
     }
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setValue('message', '', { shouldValidate: true });
-    axios.post('/api/messages', {
+    await axios.post('/api/messages', {
       ...data,
       conversationId: conversationId
     })
   }
 
-  const handleUpload = (result: any) => {
-    axios.post('/api/messages', {
+  const handleUpload = async (result: any) => {
+    await axios.post('/api/messages', {
       image: result.info.secure_url,
       conversationId: conversationId
     })
